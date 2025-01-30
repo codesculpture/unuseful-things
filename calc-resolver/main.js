@@ -1,3 +1,5 @@
+const isDigit = (a) => a > '0' && a < '9'
+
 const resolveExpression = (inp) => {
 	let scope = 0;
 	const vals = [];
@@ -26,16 +28,30 @@ const resolveExpression = (inp) => {
 			vals.push(inp[0]);
 			inp = inp.substring(1);
 		}
-		else if(!isNaN(inp[0])) {
+		else if(isDigit(inp[0])) {
 			let targetNum = inp[0];
 			let isFloat = false;
 			if(inp[1] === '.')  {
 				isFloat = true;
 				inp = inp.substring(2);
 				targetNum += '.';
-				while(!isNaN(inp[0])) {
+				while(isDigit(inp[0])) {
 					targetNum += inp[0];
 					inp = inp.substring(1);
+				}
+			}
+			else if(isDigit(inp[1])) {
+				inp = inp.substring(1);
+
+				while(isDigit(inp[0])) {
+					targetNum += inp[0];
+					inp = inp.substring(1);
+
+					if(inp[0] === '.') {
+						isFloat = true;
+						targetNum += inp[0];
+						inp = inp.substring(1);
+					}
 				}
 			}
 			else {
@@ -93,4 +109,4 @@ const resolveExpression = (inp) => {
 	return vals[0];
 }
 
-console.log(resolveExpression("calc(4rem_-_calc(2.4rem_-_calc(calc(var(--spacing)_*_2)_*_2))_-_calc(calc(var(--spacing)_*_2)_*_2))"));
+console.log(resolveExpression("calc(432.2rem_-_calc(2.4rem_-_calc(calc(var(--spacing)_*_2)_*_2))_-_calc(calc(var(--spacing)_*_2)_*_2))"));
